@@ -1,0 +1,6 @@
+@Gamiweb_HostAddress = http://localhost:5093
+
+GET {{Gamiweb_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
