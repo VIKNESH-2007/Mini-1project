@@ -18,8 +18,7 @@ import {
   DownloadCloud, 
   X,
   GraduationCap,
-  ShieldCheck,
-  Compass
+  ShieldCheck
 } from 'lucide-react';
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -37,8 +36,7 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/timetable", label: "Lecture Schedule", icon: Calendar },
           { to: "/reports", label: "Batch Performance Reports", icon: BarChart3 },
           { to: "/profile", label: "Faculty Profile", icon: UserCheck },
-          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders },
-          { to: "/auth", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" }
+          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
 
       case 'admin':
@@ -47,8 +45,7 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/teacher", label: "Teacher Directory & Workload", icon: GraduationCap, badge: "Faculty" },
           { to: "/courses", label: "Curriculum Repository", icon: BookOpen },
           { to: "/reports", label: "Institutional Analytics", icon: BarChart3 },
-          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders },
-          { to: "/auth", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" }
+          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
 
       case 'parent':
@@ -56,8 +53,7 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/parent", label: "Parent Portal", icon: Users, highlight: true },
           { to: "/reports", label: "Child's Progress Report", icon: BarChart3 },
           { to: "/timetable", label: "Class Timetable", icon: Calendar },
-          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders },
-          { to: "/auth", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" }
+          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
 
       case 'student':
@@ -72,8 +68,7 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/timetable", label: "Batch Timetable", icon: Calendar },
           { to: "/reports", label: "Progress & Report Card", icon: BarChart3 },
           { to: "/profile", label: "Profile & CS Badges", icon: UserCheck },
-          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders },
-          { to: "/auth", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" }
+          { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
     }
   };

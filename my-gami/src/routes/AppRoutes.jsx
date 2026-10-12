@@ -14,7 +14,6 @@ import ProgressReportsPage from '../pages/ProgressReportsPage';
 import ParentDashboardPage from '../pages/ParentDashboardPage';
 import TeacherDashboardPage from '../pages/TeacherDashboardPage';
 import AdminPortalPage from '../pages/AdminPortalPage';
-import PortalGatewayPage from '../pages/PortalGatewayPage';
 import TimetablePage from '../pages/TimetablePage';
 import TaskPlannerPage from '../pages/TaskPlannerPage';
 import AccessibilityPage from '../pages/AccessibilityPage';
@@ -36,7 +35,7 @@ export default function AppRoutes() {
       {/* First Page when opening the project: Login Portal */}
       <Route path="/" element={<AuthPage />} />
       <Route path="/auth" element={<AuthPage />} />
-      <Route path="/portals" element={<PortalGatewayPage />} />
+      <Route path="/portals" element={<Navigate to="/" replace />} />
       <Route path="/landing" element={<LandingPage />} />
       
       {/* Student Portal Exclusive Routes */}
