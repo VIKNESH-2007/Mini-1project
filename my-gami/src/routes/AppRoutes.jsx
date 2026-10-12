@@ -37,11 +37,11 @@ export default function AppRoutes() {
       <Route path="/portals" element={<PortalGatewayPage />} />
       <Route path="/auth" element={<AuthPage />} />
       
-      {/* Student Only Routes */}
+      {/* Student & Shared Learning Modules */}
       <Route 
         path="/dashboard" 
         element={
-          <RoleGuard allowedRoles={['student']}>
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
             <StudentDashboard />
           </RoleGuard>
         } 
@@ -49,7 +49,7 @@ export default function AppRoutes() {
       <Route 
         path="/quiz" 
         element={
-          <RoleGuard allowedRoles={['student']}>
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
             <QuizPage />
           </RoleGuard>
         } 
@@ -57,7 +57,7 @@ export default function AppRoutes() {
       <Route 
         path="/leaderboard" 
         element={
-          <RoleGuard allowedRoles={['student']}>
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
             <LeaderboardPage />
           </RoleGuard>
         } 
@@ -65,7 +65,7 @@ export default function AppRoutes() {
       <Route 
         path="/ai-tutor" 
         element={
-          <RoleGuard allowedRoles={['student']}>
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
             <AITutorPage />
           </RoleGuard>
         } 
@@ -75,27 +75,27 @@ export default function AppRoutes() {
       <Route 
         path="/teacher" 
         element={
-          <RoleGuard allowedRoles={['teacher', 'admin']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
             <TeacherDashboardPage />
           </RoleGuard>
         } 
       />
 
-      {/* Admin Only Route */}
+      {/* Admin Portal Route */}
       <Route 
         path="/admin" 
         element={
-          <RoleGuard allowedRoles={['admin']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
             <AdminPortalPage />
           </RoleGuard>
         } 
       />
 
-      {/* Parent Only Route */}
+      {/* Parent Portal Route */}
       <Route 
         path="/parent" 
         element={
-          <RoleGuard allowedRoles={['parent']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
             <ParentDashboardPage />
           </RoleGuard>
         } 

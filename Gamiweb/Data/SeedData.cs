@@ -56,12 +56,12 @@ public static class SeedData
         var teacherUser = new User
         {
             Id = "usr-teacher-01",
-            Name = "Prof. Vikram Aditya",
-            Email = "prof.aditya@cs-faculty.edu",
+            Name = "Prof. Senthil Nathan",
+            Email = "senthil.nathan@college-cs.edu",
             PasswordHash = defaultPasswordHash,
             Role = UserRole.Teacher,
             PreferredLanguage = "en",
-            AvatarUrl = "https://api.dicebear.com/7.x/bottts/svg?seed=TeacherVikram",
+            AvatarUrl = "https://api.dicebear.com/7.x/bottts/svg?seed=ProfSenthil",
             CreatedAt = DateTime.UtcNow
         };
 
@@ -88,7 +88,7 @@ public static class SeedData
                 Language = "en",
                 DifficultyLevel = "Intermediate",
                 Grade = "Undergraduate CS",
-                Instructor = "Prof. Vikram Aditya (Systems Architect)",
+                Instructor = "Prof. Senthil Nathan (Systems Architect)",
                 Rating = 4.95,
                 StudentsCount = 3840,
                 DownloadableSizeMb = 28.4,

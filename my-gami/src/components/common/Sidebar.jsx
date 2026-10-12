@@ -33,10 +33,16 @@ export default function Sidebar({ isOpen, onClose }) {
         return [
           { to: "/portals", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" },
           { to: "/teacher", label: "Teacher & Faculty Portal", icon: GraduationCap, highlight: true, badge: "Command" },
+          { to: "/dashboard", label: "Student Dashboard", icon: LayoutDashboard },
+          { to: "/ai-tutor", label: "AI Teacher Classroom", icon: Bot, badge: "24/7 AI" },
           { to: "/tasks", label: "Assign Lab Challenges", icon: ListTodo, badge: "Labs" },
           { to: "/courses", label: "Engineering Curriculum", icon: BookOpen, badge: "Syllabus" },
+          { to: "/quiz", label: "Daily Coding Quiz", icon: HelpCircle, badge: "+100 XP" },
+          { to: "/leaderboard", label: "Class Leaderboard", icon: Trophy },
           { to: "/reports", label: "Batch Performance Reports", icon: BarChart3 },
           { to: "/timetable", label: "Lecture Schedule", icon: Calendar },
+          { to: "/admin", label: "College Admin Command", icon: ShieldCheck },
+          { to: "/parent", label: "Parent Portal", icon: Users },
           { to: "/profile", label: "Faculty Profile", icon: UserCheck },
           { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
@@ -46,8 +52,16 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/portals", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" },
           { to: "/admin", label: "College Admin Command", icon: ShieldCheck, highlight: true, badge: "Admin" },
           { to: "/teacher", label: "Teacher Directory & Workload", icon: GraduationCap, badge: "Faculty" },
+          { to: "/dashboard", label: "Student Dashboard", icon: LayoutDashboard },
+          { to: "/ai-tutor", label: "AI Teacher Classroom", icon: Bot, badge: "24/7 AI" },
           { to: "/courses", label: "Curriculum Repository", icon: BookOpen },
+          { to: "/tasks", label: "Task Planner & Progress", icon: ListTodo },
+          { to: "/quiz", label: "Daily Coding Quiz", icon: HelpCircle },
+          { to: "/leaderboard", label: "Class Leaderboard", icon: Trophy },
           { to: "/reports", label: "Institutional Analytics", icon: BarChart3 },
+          { to: "/timetable", label: "Batch Timetable", icon: Calendar },
+          { to: "/parent", label: "Parent Portal", icon: Users },
+          { to: "/profile", label: "Profile & CS Badges", icon: UserCheck },
           { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
 
@@ -55,8 +69,17 @@ export default function Sidebar({ isOpen, onClose }) {
         return [
           { to: "/portals", label: "Login & Portals Gateway", icon: Compass, badge: "Portals" },
           { to: "/parent", label: "Parent Portal", icon: Users, highlight: true },
+          { to: "/dashboard", label: "Student Dashboard", icon: LayoutDashboard },
           { to: "/reports", label: "Child's Progress Report", icon: BarChart3 },
           { to: "/timetable", label: "Class Timetable", icon: Calendar },
+          { to: "/courses", label: "College Courses & Labs", icon: BookOpen },
+          { to: "/tasks", label: "Task Planner & Progress", icon: ListTodo },
+          { to: "/ai-tutor", label: "AI Teacher Classroom", icon: Bot },
+          { to: "/quiz", label: "Daily Coding Quiz", icon: HelpCircle },
+          { to: "/leaderboard", label: "Class Leaderboard", icon: Trophy },
+          { to: "/teacher", label: "Teacher & Faculty Portal", icon: GraduationCap },
+          { to: "/admin", label: "College Admin Command", icon: ShieldCheck },
+          { to: "/profile", label: "Profile & CS Badges", icon: UserCheck },
           { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];
 
@@ -72,6 +95,9 @@ export default function Sidebar({ isOpen, onClose }) {
           { to: "/leaderboard", label: "Class Leaderboard", icon: Trophy },
           { to: "/timetable", label: "Batch Timetable", icon: Calendar },
           { to: "/reports", label: "Progress & Report Card", icon: BarChart3 },
+          { to: "/teacher", label: "Teacher & Faculty Portal", icon: GraduationCap, badge: "Faculty" },
+          { to: "/admin", label: "College Admin Command", icon: ShieldCheck, badge: "Admin" },
+          { to: "/parent", label: "Parent Portal", icon: Users },
           { to: "/profile", label: "Profile & CS Badges", icon: UserCheck },
           { to: "/accessibility", label: "Accessibility Settings", icon: Sliders }
         ];

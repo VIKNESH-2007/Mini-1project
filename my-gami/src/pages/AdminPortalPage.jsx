@@ -15,9 +15,9 @@ import {
 export const initialFacultyList = [
   {
     id: "usr-teacher-01",
-    name: "Prof. Vikram Aditya",
-    email: "vikram.aditya@college-cs.edu",
-    avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=ProfVikram",
+    name: "Prof. Senthil Nathan",
+    email: "senthil.nathan@college-cs.edu",
+    avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=ProfSenthil",
     department: "Computer Science & Engineering",
     designation: "Associate Professor & Lab Head",
     subjects: ["C++ Programming", "Java Enterprise Systems", "Data Structures"],

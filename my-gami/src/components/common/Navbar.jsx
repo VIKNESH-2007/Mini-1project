@@ -230,7 +230,7 @@ export default function Navbar({ onToggleSidebar, onOpenVoiceAssistant }) {
                       currentUser?.role === 'parent' ? 'font-bold text-brand-700 bg-brand-50' : 'text-slate-700'
                     }`}
                   >
-                    <span>{t("Parent (Ramesh)")}</span>
+                    <span>{t("Parent (Murugan)")}</span>
                     {currentUser?.role === 'parent' && <span className="text-brand-600">✓</span>}
                   </button>
 

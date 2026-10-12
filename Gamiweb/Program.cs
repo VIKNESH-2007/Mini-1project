@@ -9,34 +9,46 @@ using Gamiweb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Database Configuration (MySQL with In-Memory fallback for agile development)
+// 1. Database Configuration (MySQL with automatic In-Memory fallback for zero-crash startup)
 var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryDb", false);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var canUseMySql = false;
+
+if (!useInMemory && !string.IsNullOrEmpty(connectionString))
+{
+    try
+    {
+        var csBuilder = new MySqlConnector.MySqlConnectionStringBuilder(connectionString)
+        {
+            ConnectionTimeout = 2
+        };
+        using var testConn = new MySqlConnector.MySqlConnection(csBuilder.ConnectionString);
+        testConn.Open();
+        canUseMySql = true;
+    }
+    catch
+    {
+        canUseMySql = false;
+        Console.WriteLine("[Gamiweb] Local MySQL not reachable — automatically using In-Memory Database so all modules run out of the box.");
+    }
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    if (useInMemory || string.IsNullOrEmpty(connectionString))
+    if (!canUseMySql || useInMemory || string.IsNullOrEmpty(connectionString))
     {
         options.UseInMemoryDatabase("GamiwebDb");
     }
     else
     {
-        try
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 36));
+        options.UseMySql(connectionString, serverVersion, mySqlOptions =>
         {
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 36));
-            options.UseMySql(connectionString, serverVersion, mySqlOptions =>
-            {
-                mySqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 3,
-                    maxRetryDelay: TimeSpan.FromSeconds(5),
-                    errorNumbersToAdd: null);
-            });
-        }
-        catch
-        {
-            // Resilient fallback to InMemory database if MySQL server is not locally running
-            options.UseInMemoryDatabase("GamiwebDb");
-        }
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        });
     }
 });
 
@@ -142,6 +154,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await context.Database.EnsureCreatedAsync();
     await SeedData.InitializeAsync(context);
 }
 
