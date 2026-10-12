@@ -47,12 +47,26 @@ export default function AuthPage() {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
-  const { login, register, loginWithGoogle, authLoading } = useAuth();
+  const { login, register, loginWithGoogle, switchRole, authLoading } = useAuth();
   const { language, setLanguage, supportedLanguages } = useLanguage();
   const navigate = useNavigate();
 
   const handleRoleChange = (roleKey) => {
     setSelectedRole(roleKey);
+    setErrorMsg('');
+  };
+
+  const navigateToRoleDashboard = (roleKey) => {
+    if (roleKey === 'student') navigate('/dashboard');
+    else if (roleKey === 'teacher') navigate('/teacher');
+    else if (roleKey === 'parent') navigate('/parent');
+    else if (roleKey === 'admin') navigate('/admin');
+    else navigate('/dashboard');
+  };
+
+  const handleQuickDemoLogin = () => {
+    switchRole(selectedRole);
+    navigateToRoleDashboard(selectedRole);
   };
 
   // Launch Google Sign-In Flow
@@ -114,9 +128,7 @@ export default function AuthPage() {
     try {
       await loginWithGoogle(selectedRole, chosenGoogleEmail, chosenGoogleName);
       setShowGoogleModal(false);
-      if (selectedRole === 'student') navigate('/dashboard');
-      else if (selectedRole === 'teacher') navigate('/teacher');
-      else if (selectedRole === 'parent') navigate('/parent');
+      navigateToRoleDashboard(selectedRole);
     } catch (err) {
       setGoogleModalError('Failed to sign in with Google. Please try again.');
     }
@@ -186,9 +198,7 @@ export default function AuthPage() {
 
       try {
         await login(selectedRole, email.trim(), password);
-        if (selectedRole === 'student') navigate('/dashboard');
-        else if (selectedRole === 'teacher') navigate('/teacher');
-        else if (selectedRole === 'parent') navigate('/parent');
+        navigateToRoleDashboard(selectedRole);
       } catch (err) {
         setErrorMsg(err.message || 'Invalid username or password.');
       }
@@ -602,16 +612,17 @@ export default function AuthPage() {
           </div>
         </div>
 
-        {/* Role Selector Tabs (Student, Teacher, Parent) */}
-        <div>
-          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-            Select Your Role
+        {/* Role Selector Tabs (Student, Teacher, Parent, Admin) */}
+        <div className="space-y-2.5">
+          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            Select Login Portal
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
-              { role: 'student', label: 'Student', icon: User, desc: 'Learn with AI Tutor' },
-              { role: 'teacher', label: 'Teacher', icon: GraduationCap, desc: 'Faculty Portal' },
-              { role: 'parent', label: 'Parent', icon: Users, desc: 'Monitor Progress' }
+              { role: 'student', label: 'Student', icon: User, desc: 'Sanjay (B.Tech CS)' },
+              { role: 'teacher', label: 'Teacher', icon: GraduationCap, desc: 'Prof. Senthil Nathan' },
+              { role: 'parent', label: 'Parent', icon: Users, desc: 'Murugan (Guardian)' },
+              { role: 'admin', label: 'Admin', icon: ShieldCheck, desc: 'Dr. Meenakshi' }
             ].map((item) => {
               const Icon = item.icon;
               const isSelected = selectedRole === item.role;
@@ -620,7 +631,7 @@ export default function AuthPage() {
                   key={item.role}
                   type="button"
                   onClick={() => handleRoleChange(item.role)}
-                  className={`p-2.5 sm:p-3 rounded-2xl border-2 text-center transition flex flex-col items-center gap-1 text-xs font-bold ${
+                  className={`p-2.5 rounded-2xl border-2 text-center transition flex flex-col items-center gap-1 text-xs font-bold ${
                     isSelected
                       ? 'border-brand-500 bg-brand-50 text-brand-900 shadow-xs ring-1 ring-brand-300'
                       : 'border-slate-200 hover:border-slate-300 text-slate-600'
@@ -628,11 +639,24 @@ export default function AuthPage() {
                 >
                   <Icon className={`w-5 h-5 ${isSelected ? 'text-brand-600' : 'text-slate-400'}`} />
                   <span className="text-xs font-black">{item.label}</span>
-                  <span className="text-[9px] sm:text-[10px] font-normal text-slate-400 leading-tight">{item.desc}</span>
+                  <span className="text-[9px] font-normal text-slate-400 leading-tight truncate w-full">{item.desc}</span>
                 </button>
               );
             })}
           </div>
+
+          {/* 1-Click Demo Login for Selected Portal */}
+          <button
+            type="button"
+            onClick={handleQuickDemoLogin}
+            className="w-full py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-95"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <span>
+              Instant Demo Login to {selectedRole === 'student' ? 'Student Portal (Sanjay)' : selectedRole === 'teacher' ? 'Teacher Portal (Prof. Senthil Nathan)' : selectedRole === 'parent' ? 'Parent Portal (Murugan)' : 'Admin Portal (Dr. Meenakshi)'}
+            </span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* Language selector dropdown */}

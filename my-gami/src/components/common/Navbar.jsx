@@ -25,8 +25,8 @@ export default function Navbar({ onToggleSidebar, onOpenVoiceAssistant }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isAuthPage = location.pathname === '/auth';
-  const isPortalsPage = location.pathname === '/portals';
+  const isAuthPage = location.pathname === '/' || location.pathname === '/auth';
+  const isPortalsPage = location.pathname === '/portals' || location.pathname === '/landing';
 
   const handleRoleChange = (role) => {
     switchRole(role);

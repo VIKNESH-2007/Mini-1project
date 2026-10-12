@@ -33,15 +33,17 @@ function RoleGuard({ allowedRoles, children, fallbackPath }) {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/portals" element={<PortalGatewayPage />} />
+      {/* First Page when opening the project: Login Portal */}
+      <Route path="/" element={<AuthPage />} />
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/portals" element={<PortalGatewayPage />} />
+      <Route path="/landing" element={<LandingPage />} />
       
-      {/* Student & Shared Learning Modules */}
+      {/* Student Portal Exclusive Routes */}
       <Route 
         path="/dashboard" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
+          <RoleGuard allowedRoles={['student']}>
             <StudentDashboard />
           </RoleGuard>
         } 
@@ -49,7 +51,7 @@ export default function AppRoutes() {
       <Route 
         path="/quiz" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
+          <RoleGuard allowedRoles={['student']}>
             <QuizPage />
           </RoleGuard>
         } 
@@ -57,7 +59,7 @@ export default function AppRoutes() {
       <Route 
         path="/leaderboard" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
+          <RoleGuard allowedRoles={['student']}>
             <LeaderboardPage />
           </RoleGuard>
         } 
@@ -65,17 +67,17 @@ export default function AppRoutes() {
       <Route 
         path="/ai-tutor" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']}>
+          <RoleGuard allowedRoles={['student']}>
             <AITutorPage />
           </RoleGuard>
         } 
       />
 
-      {/* Teacher / Faculty Routes */}
+      {/* Teacher / Faculty Portal Route */}
       <Route 
         path="/teacher" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['teacher', 'admin']}>
             <TeacherDashboardPage />
           </RoleGuard>
         } 
@@ -85,7 +87,7 @@ export default function AppRoutes() {
       <Route 
         path="/admin" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['admin']}>
             <AdminPortalPage />
           </RoleGuard>
         } 
@@ -95,21 +97,63 @@ export default function AppRoutes() {
       <Route 
         path="/parent" 
         element={
-          <RoleGuard allowedRoles={['student', 'teacher', 'admin', 'parent']} fallbackPath="/dashboard">
+          <RoleGuard allowedRoles={['parent']}>
             <ParentDashboardPage />
           </RoleGuard>
         } 
       />
 
-      {/* Shared Educational & System Routes */}
-      <Route path="/courses" element={<CourseLibraryPage />} />
-      <Route path="/course/:id" element={<CoursePlayerPage />} />
-      <Route path="/tasks" element={<TaskPlannerPage />} />
-      <Route path="/reports" element={<ProgressReportsPage />} />
-      <Route path="/timetable" element={<TimetablePage />} />
+      {/* Role-Specific Shared Academic Routes */}
+      <Route 
+        path="/courses" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin']}>
+            <CourseLibraryPage />
+          </RoleGuard>
+        } 
+      />
+      <Route 
+        path="/course/:id" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher', 'admin']}>
+            <CoursePlayerPage />
+          </RoleGuard>
+        } 
+      />
+      <Route 
+        path="/tasks" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher']}>
+            <TaskPlannerPage />
+          </RoleGuard>
+        } 
+      />
+      <Route 
+        path="/reports" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher', 'parent', 'admin']}>
+            <ProgressReportsPage />
+          </RoleGuard>
+        } 
+      />
+      <Route 
+        path="/timetable" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher', 'parent']}>
+            <TimetablePage />
+          </RoleGuard>
+        } 
+      />
+      <Route 
+        path="/profile" 
+        element={
+          <RoleGuard allowedRoles={['student', 'teacher']}>
+            <ProfilePage />
+          </RoleGuard>
+        } 
+      />
       <Route path="/accessibility" element={<AccessibilityPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="*" element={<Navigate to="/portals" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

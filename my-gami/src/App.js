@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, useLocation, Link } from 'react-router-dom';
 
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import { OfflineProvider } from './context/OfflineContext';
@@ -21,17 +21,24 @@ import {
   HelpCircle, 
   Bot, 
   User, 
-  ListTodo
+  ListTodo,
+  GraduationCap,
+  Users,
+  BarChart3,
+  Calendar,
+  Sliders,
+  ShieldCheck
 } from 'lucide-react';
 
 function AppLayout() {
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [voiceAssistantOpen, setVoiceAssistantOpen] = useState(false);
   const location = useLocation();
 
-  const isLandingPage = location.pathname === '/';
-  const isAuthPage = location.pathname === '/auth';
+  const isLoginOrGatewayPage = ['/', '/auth', '/portals', '/landing'].includes(location.pathname);
+  const role = currentUser?.role || 'student';
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col antialiased selection:bg-brand-500 selection:text-white">
@@ -46,84 +53,215 @@ function AppLayout() {
 
       {/* Main Container */}
       <div className="flex-1 flex w-full max-w-7xl mx-auto">
-        {/* Sidebar Drawer (hidden on landing & auth) */}
-        {!isLandingPage && !isAuthPage && (
+        {/* Sidebar Drawer (hidden on login & gateway pages) */}
+        {!isLoginOrGatewayPage && (
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         )}
 
         {/* Main Content Area */}
         <main className={`flex-1 w-full min-w-0 transition-all ${
-          isLandingPage || isAuthPage ? 'p-0' : 'p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8'
+          isLoginOrGatewayPage ? 'p-0' : 'p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8'
         }`}>
           <AppRoutes />
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation Bar (For Rural Android Devices) */}
-      {!isLandingPage && !isAuthPage && (
+      {/* Mobile Bottom Navigation Bar (Role-Specific) */}
+      {!isLoginOrGatewayPage && (
         <nav 
           className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 lg:hidden flex items-center justify-around py-2 px-1 shadow-lg"
           aria-label="Mobile Navigation"
         >
-          <Link
-            to="/dashboard"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname === '/dashboard' ? 'text-brand-600' : 'text-slate-500'
-            }`}
-          >
-            <LayoutDashboard className="w-5 h-5" />
-            <span>{t("Home")}</span>
-          </Link>
+          {role === 'student' && (
+            <>
+              <Link
+                to="/dashboard"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/dashboard' ? 'text-brand-600' : 'text-slate-500'
+                }`}
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                <span>{t("Dashboard")}</span>
+              </Link>
+              <Link
+                to="/courses"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname.startsWith('/course') ? 'text-brand-600' : 'text-slate-500'
+                }`}
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>{t("Courses")}</span>
+              </Link>
+              <Link
+                to="/ai-tutor"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/ai-tutor' ? 'text-purple-600' : 'text-slate-500'
+                }`}
+              >
+                <Bot className="w-5 h-5" />
+                <span>{t("AI Tutor")}</span>
+              </Link>
+              <Link
+                to="/tasks"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/tasks' ? 'text-purple-600' : 'text-slate-500'
+                }`}
+              >
+                <ListTodo className="w-5 h-5" />
+                <span>{t("Tasks")}</span>
+              </Link>
+              <Link
+                to="/quiz"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/quiz' ? 'text-amber-600' : 'text-slate-500'
+                }`}
+              >
+                <HelpCircle className="w-5 h-5" />
+                <span>{t("Quiz")}</span>
+              </Link>
+              <Link
+                to="/profile"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/profile' ? 'text-brand-600' : 'text-slate-500'
+                }`}
+              >
+                <User className="w-5 h-5" />
+                <span>{t("Profile")}</span>
+              </Link>
+            </>
+          )}
 
-          <Link
-            to="/courses"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname.startsWith('/course') ? 'text-brand-600' : 'text-slate-500'
-            }`}
-          >
-            <BookOpen className="w-5 h-5" />
-            <span>{t("Courses")}</span>
-          </Link>
+          {role === 'teacher' && (
+            <>
+              <Link
+                to="/teacher"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/teacher' ? 'text-emerald-600' : 'text-slate-500'
+                }`}
+              >
+                <GraduationCap className="w-5 h-5" />
+                <span>{t("Faculty")}</span>
+              </Link>
+              <Link
+                to="/courses"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname.startsWith('/course') ? 'text-emerald-600' : 'text-slate-500'
+                }`}
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>{t("Courses")}</span>
+              </Link>
+              <Link
+                to="/tasks"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/tasks' ? 'text-emerald-600' : 'text-slate-500'
+                }`}
+              >
+                <ListTodo className="w-5 h-5" />
+                <span>{t("Labs")}</span>
+              </Link>
+              <Link
+                to="/timetable"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/timetable' ? 'text-emerald-600' : 'text-slate-500'
+                }`}
+              >
+                <Calendar className="w-5 h-5" />
+                <span>{t("Schedule")}</span>
+              </Link>
+              <Link
+                to="/reports"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/reports' ? 'text-emerald-600' : 'text-slate-500'
+                }`}
+              >
+                <BarChart3 className="w-5 h-5" />
+                <span>{t("Reports")}</span>
+              </Link>
+            </>
+          )}
 
-          <Link
-            to="/tasks"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname === '/tasks' ? 'text-purple-600' : 'text-slate-500'
-            }`}
-          >
-            <ListTodo className="w-5 h-5" />
-            <span>{t("Tasks")}</span>
-          </Link>
+          {role === 'parent' && (
+            <>
+              <Link
+                to="/parent"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/parent' ? 'text-teal-600' : 'text-slate-500'
+                }`}
+              >
+                <Users className="w-5 h-5" />
+                <span>{t("Parent Portal")}</span>
+              </Link>
+              <Link
+                to="/reports"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/reports' ? 'text-teal-600' : 'text-slate-500'
+                }`}
+              >
+                <BarChart3 className="w-5 h-5" />
+                <span>{t("Reports")}</span>
+              </Link>
+              <Link
+                to="/timetable"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/timetable' ? 'text-teal-600' : 'text-slate-500'
+                }`}
+              >
+                <Calendar className="w-5 h-5" />
+                <span>{t("Timetable")}</span>
+              </Link>
+              <Link
+                to="/accessibility"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/accessibility' ? 'text-teal-600' : 'text-slate-500'
+                }`}
+              >
+                <Sliders className="w-5 h-5" />
+                <span>{t("Settings")}</span>
+              </Link>
+            </>
+          )}
 
-          <Link
-            to="/quiz"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname === '/quiz' ? 'text-amber-600' : 'text-slate-500'
-            }`}
-          >
-            <HelpCircle className="w-5 h-5" />
-            <span>{t("Quiz")}</span>
-          </Link>
-
-          <Link
-            to="/ai-tutor"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname === '/ai-tutor' ? 'text-purple-600' : 'text-slate-500'
-            }`}
-          >
-            <Bot className="w-5 h-5" />
-            <span>{t("AI Tutor")}</span>
-          </Link>
-
-          <Link
-            to="/profile"
-            className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
-              location.pathname === '/profile' ? 'text-brand-600' : 'text-slate-500'
-            }`}
-          >
-            <User className="w-5 h-5" />
-            <span>{t("Profile")}</span>
-          </Link>
+          {role === 'admin' && (
+            <>
+              <Link
+                to="/admin"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/admin' ? 'text-amber-600' : 'text-slate-500'
+                }`}
+              >
+                <ShieldCheck className="w-5 h-5" />
+                <span>{t("Admin")}</span>
+              </Link>
+              <Link
+                to="/teacher"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/teacher' ? 'text-amber-600' : 'text-slate-500'
+                }`}
+              >
+                <GraduationCap className="w-5 h-5" />
+                <span>{t("Faculty")}</span>
+              </Link>
+              <Link
+                to="/courses"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname.startsWith('/course') ? 'text-amber-600' : 'text-slate-500'
+                }`}
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>{t("Courses")}</span>
+              </Link>
+              <Link
+                to="/reports"
+                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-extrabold transition ${
+                  location.pathname === '/reports' ? 'text-amber-600' : 'text-slate-500'
+                }`}
+              >
+                <BarChart3 className="w-5 h-5" />
+                <span>{t("Analytics")}</span>
+              </Link>
+            </>
+          )}
         </nav>
       )}
 
