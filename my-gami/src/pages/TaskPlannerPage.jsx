@@ -134,12 +134,26 @@ export default function TaskPlannerPage() {
   const [tasks, setTasks] = useState(() => {
     try {
       const saved = localStorage.getItem('gamilearn_scheduled_tasks');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const nowMs = Date.now();
+        return parsed.map((t, idx) => {
+          if (!t.isCompleted && t.dueDate && new Date(t.dueDate).getTime() < nowMs) {
+            return {
+              ...t,
+              dueDate: new Date(nowMs + (idx + 1) * 24 * 60 * 60 * 1000).toISOString()
+            };
+          }
+          return t;
+        });
+      }
     } catch (e) {
       console.warn('Could not read cached tasks from localStorage', e);
     }
     return INITIAL_MOCK_TASKS;
   });
+
+  const [completionBannerMsg, setCompletionBannerMsg] = useState('');
 
   // Filters & Search
   const [activeTab, setActiveTab] = useState('All'); // All, Today, Upcoming, In Progress, Completed, Overdue
@@ -219,7 +233,7 @@ export default function TaskPlannerPage() {
     return { subject: sub, total, done, rate };
   });
 
-  // Toggle Task Completion
+  // Toggle Task Completion (Cross-Check & Verify)
   const handleToggleTask = async (task) => {
     const newStatus = !task.isCompleted;
     const updated = tasks.map(t => {
@@ -235,8 +249,11 @@ export default function TaskPlannerPage() {
     setTasks(updated);
 
     if (newStatus) {
-      addXP(40, "Task Completed! 🚀", `+40 XP: You finished "${task.title}"`);
+      addXP(40, "Task Cross-Checked & Completed! 🚀", `+40 XP: You finished "${task.title}"`);
       fireConfetti();
+      setCompletionBannerMsg(`✅ Cross-Check Verified: "${task.title}" has been completed successfully! (+40 XP Awarded)`);
+    } else {
+      setCompletionBannerMsg('');
     }
 
     if (isOnline) {
@@ -628,6 +645,49 @@ export default function TaskPlannerPage() {
           ))}
         </div>
 
+        {/* Cross-Check & Completion Status Banner */}
+        <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+          completedTasksCount === totalTasksCount && totalTasksCount > 0
+            ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+            : 'bg-slate-50 border-slate-200 text-slate-800'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+              completedTasksCount > 0 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'
+            }`}>
+              <CheckCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs sm:text-sm font-black">
+                {completionBannerMsg
+                  ? completionBannerMsg
+                  : completedTasksCount === totalTasksCount && totalTasksCount > 0
+                  ? `🎉 All ${totalTasksCount} Scheduled Tasks Cross-Checked & Completed Successfully!`
+                  : `Task Cross-Check Status: ${completedTasksCount} of ${totalTasksCount} Tasks Verified & Completed`}
+              </p>
+              <p className="text-[11px] text-slate-500">
+                Click the checkbox or "Cross-Check & Complete" button on any task to cross it out and display its completed statement.
+              </p>
+            </div>
+          </div>
+
+          {pendingTasksCount > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                const nowIso = new Date().toISOString();
+                setTasks(prev => prev.map(t => ({ ...t, isCompleted: true, completedAt: t.completedAt || nowIso })));
+                addXP(pendingTasksCount * 40, "All Tasks Completed! 🏆", `+${pendingTasksCount * 40} XP earned`);
+                fireConfetti();
+                setCompletionBannerMsg(`🎉 All ${totalTasksCount} Scheduled Lab Tasks have been cross-checked and marked as Completed!`);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shrink-0 transition active:scale-95 shadow-xs"
+            >
+              ✓ Complete All ({pendingTasksCount})
+            </button>
+          )}
+        </div>
+
         {/* Task Cards List */}
         {filteredTasks.length === 0 ? (
           <div className="text-center py-12 px-4 border-2 border-dashed border-slate-200 rounded-3xl">
@@ -656,9 +716,9 @@ export default function TaskPlannerPage() {
               return (
                 <div
                   key={task.id}
-                  className={`p-4 rounded-2xl border transition group flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                  className={`p-4 rounded-2xl border-2 transition group flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                     task.isCompleted 
-                      ? 'bg-slate-50/80 border-slate-200 opacity-80' 
+                      ? 'bg-emerald-50/35 border-emerald-200 shadow-2xs' 
                       : isOverdue 
                         ? 'bg-rose-50/40 border-rose-200 hover:border-rose-300' 
                         : 'bg-white border-slate-200 hover:border-brand-300 hover:shadow-xs'
@@ -669,17 +729,18 @@ export default function TaskPlannerPage() {
                   <div className="flex items-start gap-3.5 flex-1 min-w-0">
                     <button
                       onClick={() => handleToggleTask(task)}
-                      className={`mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition shrink-0 ${
+                      className={`mt-0.5 w-7 h-7 rounded-lg border-2 flex items-center justify-center transition shrink-0 ${
                         task.isCompleted
-                          ? 'bg-emerald-500 border-emerald-500 text-white'
-                          : 'border-slate-300 hover:border-brand-500 bg-white'
+                          ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
+                          : 'border-slate-300 hover:border-emerald-500 bg-white'
                       }`}
                       aria-label={task.isCompleted ? "Mark task incomplete" : "Mark task complete"}
+                      title={task.isCompleted ? "Task Completed (Click to undo)" : "Click to cross-check and complete task"}
                     >
-                      {task.isCompleted && <CheckCircle className="w-4 h-4 fill-white text-emerald-500" />}
+                      {task.isCompleted && <CheckCircle className="w-4 h-4 fill-white text-emerald-600" />}
                     </button>
 
-                    <div className="min-w-0 space-y-1">
+                    <div className="min-w-0 flex-1 space-y-1.5">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${SUBJECT_COLORS[task.subject] || 'bg-slate-100 text-slate-700'}`}>
                           {task.subject}
@@ -697,6 +758,13 @@ export default function TaskPlannerPage() {
                           {task.priority} Priority
                         </span>
 
+                        {task.isCompleted && (
+                          <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white flex items-center gap-1 shadow-2xs">
+                            <CheckCircle className="w-3 h-3" />
+                            <span>Cross-Checked & Completed</span>
+                          </span>
+                        )}
+
                         {isOverdue && (
                           <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500 text-white flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" /> Overdue
@@ -704,16 +772,33 @@ export default function TaskPlannerPage() {
                         )}
                       </div>
 
-                      <h4 className={`text-sm font-extrabold text-slate-900 transition ${
-                        task.isCompleted ? 'line-through text-slate-400' : ''
+                      <h4 className={`text-sm font-extrabold transition ${
+                        task.isCompleted
+                          ? 'line-through decoration-2 decoration-emerald-600 text-slate-500'
+                          : 'text-slate-900'
                       }`}>
                         {task.title}
                       </h4>
 
                       {task.description && (
-                        <p className="text-xs text-slate-500 line-clamp-2">
+                        <p className={`text-xs line-clamp-2 ${
+                          task.isCompleted ? 'line-through decoration-slate-400 text-slate-400' : 'text-slate-500'
+                        }`}>
                           {task.description}
                         </p>
+                      )}
+
+                      {/* Completed Statement Box */}
+                      {task.isCompleted && (
+                        <div className="p-2.5 rounded-xl bg-emerald-100/70 border border-emerald-300 flex items-center justify-between gap-2 text-xs text-emerald-950 font-extrabold">
+                          <span className="flex items-center gap-1.5">
+                            <CheckCircle className="w-4 h-4 text-emerald-700 shrink-0" />
+                            <span>Completed Statement: This task has been cross-checked and verified as completed!</span>
+                          </span>
+                          <span className="text-[10px] font-black bg-emerald-700 text-white px-2 py-0.5 rounded-full shrink-0">
+                            +40 XP Earned
+                          </span>
+                        </div>
                       )}
 
                       <div className="flex items-center gap-3 text-[11px] text-slate-400 pt-0.5 flex-wrap">
@@ -726,11 +811,11 @@ export default function TaskPlannerPage() {
                           <Calendar className="w-3.5 h-3.5" />
                           <span>Due: {formattedDate}</span>
                         </span>
-                        {task.isCompleted && task.completedAt && (
+                        {task.isCompleted && (
                           <>
                             <span>•</span>
-                            <span className="text-emerald-600 font-bold">
-                              ✓ Completed
+                            <span className="text-emerald-700 font-extrabold">
+                              ✓ Status: Completed & Verified
                             </span>
                           </>
                         )}
@@ -738,8 +823,21 @@ export default function TaskPlannerPage() {
                     </div>
                   </div>
 
-                  {/* Right: Actions */}
+                  {/* Right: Complete Button + Edit/Delete Actions */}
                   <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleTask(task)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition active:scale-95 ${
+                        task.isCompleted
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'
+                          : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs'
+                      }`}
+                    >
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      <span>{task.isCompleted ? 'Completed ✓' : 'Cross-Check & Complete'}</span>
+                    </button>
+
                     <button
                       onClick={() => handleOpenEditModal(task)}
                       className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
