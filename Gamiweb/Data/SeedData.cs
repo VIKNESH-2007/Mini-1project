@@ -288,28 +288,22 @@ public static class SeedData
             SyncStatus = "CachedOffline"
         });
 
-        // 3. Seed Quizzes & Questions
+        // 3. Seed Quizzes & Questions (20 Comprehensive Computer Science Questions)
         var dailyQuiz = new Quiz
         {
             Id = "quiz-daily-01",
-            Title = "College Computer Science & Engineering Challenge",
-            Subject = "Computer Science",
+            Title = "Comprehensive Computer Science & Engineering Challenge (20 Questions)",
+            Subject = "All Subjects Mega Quiz",
             Difficulty = "Intermediate",
-            TimeLimitSeconds = 75,
-            TotalXp = 100,
+            TimeLimitSeconds = 300,
+            TotalXp = 500,
             Questions = new List<QuizQuestion>
             {
                 new()
                 {
                     Id = "q-01",
-                    QuestionText = "Given int arr[] = {10, 20, 30, 40}; int *p = arr;, what is the value of *(p + 2) in C/C++?",
-                    OptionsJson = JsonSerializer.Serialize(new List<string>
-                    {
-                        "10",
-                        "20",
-                        "30",
-                        "40"
-                    }),
+                    QuestionText = "Given `int arr[] = {10, 20, 30, 40}; int *p = arr;`, what is the value of `*(p + 2)` in C/C++?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "10", "20", "30", "40" }),
                     CorrectOption = 2,
                     HintText = "Pointer arithmetic advances by data type size. *(p + 2) accesses arr[2].",
                     ExplanationText = "arr decays to a pointer to arr[0]. Adding 2 offsets the address by 2 ints, dereferencing arr[2] (30).",
@@ -350,7 +344,7 @@ public static class SeedData
                 new()
                 {
                     Id = "q-04",
-                    QuestionText = "In Git, what is the key difference between git merge and git rebase when incorporating upstream changes?",
+                    QuestionText = "In Git, what is the key difference between `git merge` and `git rebase` when incorporating upstream changes?",
                     OptionsJson = JsonSerializer.Serialize(new List<string>
                     {
                         "Merge rewrites commit hashes, while rebase preserves exact historical commits",
@@ -361,6 +355,226 @@ public static class SeedData
                     CorrectOption = 1,
                     HintText = "One preserves divergent branch topology; the other produces a linear commit history.",
                     ExplanationText = "git merge creates a 3-way merge commit connecting two parent branches. git rebase replays commits on top of the target base, creating a linear history.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-05",
+                    QuestionText = "What is the worst-case and average-case time complexity of searching for an element in a balanced Binary Search Tree (AVL / Red-Black Tree)?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "O(1)", "O(log n)", "O(n)", "O(n log n)" }),
+                    CorrectOption = 1,
+                    HintText = "At each node comparison, half of the remaining subtree is eliminated.",
+                    ExplanationText = "A height-balanced Binary Search Tree maintains a height of O(log n), guaranteeing O(log n) time complexity for search, insertion, and deletion.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-06",
+                    QuestionText = "In C programming, what happens if you allocate heap memory using `malloc()` and forget to call `free()` before the pointer goes out of scope?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "The C compiler automatically runs garbage collection",
+                        "A memory leak occurs because the allocated heap block remains reserved until program termination",
+                        "The operating system immediately restarts the computer",
+                        "The memory is automatically moved to the CPU registers"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "C does not have an automatic garbage collector like Java or C#.",
+                    ExplanationText = "Without calling free(), the heap memory remains allocated without any pointer referencing it, causing a memory leak.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-07",
+                    QuestionText = "Which data structure operates on the LIFO (Last-In, First-Out) principle and is used by the CPU to manage function call frames and recursion?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "Queue", "Stack", "Hash Table", "Min-Heap" }),
+                    CorrectOption = 1,
+                    HintText = "Think about push() and pop() operations and the Call Stack.",
+                    ExplanationText = "A Stack follows Last-In, First-Out (LIFO). Every function call pushes a new stack frame containing local variables and return addresses.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-08",
+                    QuestionText = "In C# ASP.NET Core Dependency Injection, which service lifetime creates a single instance per incoming HTTP request?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "AddTransient", "AddScoped", "AddSingleton", "AddStatic" }),
+                    CorrectOption = 1,
+                    HintText = "This lifetime is standard for Entity Framework Core DbContext.",
+                    ExplanationText = "AddScoped creates one instance per HTTP request scope, ensuring all services within the same web request share the same DbContext instance.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-09",
+                    QuestionText = "In Java Collections, what is the average time complexity of `get(key)` and `put(key, value)` in a properly sized `HashMap`?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "O(1)", "O(log n)", "O(n)", "O(n^2)" }),
+                    CorrectOption = 0,
+                    HintText = "Hash functions compute the bucket array index directly from the key's hash code.",
+                    ExplanationText = "HashMap uses hashCode() to compute the bucket index in constant O(1) average time.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-10",
+                    QuestionText = "Why should `COPY package*.json ./` and `RUN npm install` be placed BEFORE `COPY . .` in a production Dockerfile?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "Docker requires package.json to be the first line of every Dockerfile",
+                        "To leverage Docker layer caching so dependencies are not reinstalled every time source code changes",
+                        "Because Node.js cannot read source files if npm install runs afterward",
+                        "To disable container networking during the build phase"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "Docker caches unchanged layers from top to bottom.",
+                    ExplanationText = "By copying package.json and installing dependencies before copying frequently modified source code, Docker reuses the cached node_modules layer.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-11",
+                    QuestionText = "In C++, what is the purpose of declaring a base class destructor as `virtual`?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "To prevent the class from being inherited",
+                        "To ensure the derived class destructor is called properly when deleting an object through a base class pointer",
+                        "To allocate the object on the CPU cache instead of RAM",
+                        "To allow constructor overloading"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "What happens when you run delete basePtr; where basePtr points to a Derived object?",
+                    ExplanationText = "If the base destructor is not virtual, deleting a derived object via a base class pointer invokes only the base destructor, causing resource leaks.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-12",
+                    QuestionText = "Which Git command safely discards unstaged changes in a specific file in your working directory?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "git commit --amend",
+                        "git restore <filename>",
+                        "git push --force",
+                        "git remote prune origin"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "Introduced in Git 2.23 to separate file restoration from branch switching.",
+                    ExplanationText = "git restore <filename> discards unstaged modifications in the working directory and restores the file to match the current index/HEAD.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-13",
+                    QuestionText = "In Operating Systems, what happens when a process calls the Unix `fork()` system call?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "The current process terminates immediately",
+                        "A new child process is created as a duplicate; fork() returns 0 to the child and the child's PID to the parent",
+                        "The system formats the disk partition",
+                        "A new kernel thread replaces the init process"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "Check the return value of fork() in parent vs child.",
+                    ExplanationText = "fork() duplicates the calling process. It returns 0 inside the newly created child process and returns the positive PID of the child to the parent.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-14",
+                    QuestionText = "Which sorting algorithm uses a 'Divide and Conquer' strategy, guarantees O(n log n) time complexity in all cases, and is stable?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "Bubble Sort", "Quick Sort", "Merge Sort", "Selection Sort" }),
+                    CorrectOption = 2,
+                    HintText = "It recursively splits the array into halves and merges sorted subarrays.",
+                    ExplanationText = "Merge Sort recursively divides the array into two halves, sorts them, and merges them in O(n) time, guaranteeing O(n log n) worst-case complexity.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-15",
+                    QuestionText = "In SQL relational databases, what does the 'A' in ACID transactions stand for?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "Availability — the database is always online",
+                        "Atomicity — all operations in a transaction succeed together or the entire transaction rolls back",
+                        "Asynchronous — queries run without waiting for disk writes",
+                        "Authentication — only logged-in users can query tables"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "Think 'All or Nothing' when transferring money between two bank accounts.",
+                    ExplanationText = "Atomicity guarantees that a database transaction is treated as a single indivisible unit: either all statements commit, or none take effect.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-16",
+                    QuestionText = "In C# and .NET, what is the primary difference between a `struct` and a `class`?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "A struct is a value type (typically stack-allocated), whereas a class is a reference type (heap-allocated)",
+                        "A struct supports inheritance from multiple classes, whereas a class does not",
+                        "A class cannot contain methods, whereas a struct can",
+                        "Structs can only hold strings"
+                    }),
+                    CorrectOption = 0,
+                    HintText = "Think about Value Types vs Reference Types in the Common Language Runtime (CLR).",
+                    ExplanationText = "In C#, struct is a value type that stores its data directly, while class is a reference type allocated on the managed GC heap.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-17",
+                    QuestionText = "In Docker Compose, what is the role of the `volumes:` section for a MySQL or PostgreSQL database container?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "It controls the speaker volume of the server",
+                        "It persists database files on the host machine so data survives when containers are stopped or recreated",
+                        "It compresses the Docker image into a zip archive",
+                        "It opens firewall ports to the public internet"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "Containers are ephemeral by default—what happens to data inside a container when docker compose down runs?",
+                    ExplanationText = "Docker volumes map persistent host storage into the container filesystem, ensuring database tables and records are preserved across restarts.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-18",
+                    QuestionText = "In Graph Algorithms, which traversal algorithm uses a Queue (FIFO) and is guaranteed to find the shortest path in an unweighted graph?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "Depth-First Search (DFS)",
+                        "Breadth-First Search (BFS)",
+                        "Binary Search",
+                        "Kruskal's Minimum Spanning Tree"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "It explores vertices level-by-level (distance 1, then distance 2, etc.).",
+                    ExplanationText = "Breadth-First Search (BFS) uses a FIFO Queue to visit nodes layer by layer according to their distance from the source.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-19",
+                    QuestionText = "In RESTful Web APIs, which HTTP method is idempotent and typically used to completely replace or update an existing resource at a known URI?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string> { "POST", "PUT", "CONNECT", "TRACE" }),
+                    CorrectOption = 1,
+                    HintText = "Calling this method multiple times with the same payload produces the exact same server state.",
+                    ExplanationText = "PUT is idempotent and updates/replaces the target resource representation at a specific URI, whereas POST creates a new resource.",
+                    XpValue = 25
+                },
+                new()
+                {
+                    Id = "q-20",
+                    QuestionText = "In Java multithreading, what does the `synchronized` keyword guarantee when applied to a method or block?",
+                    OptionsJson = JsonSerializer.Serialize(new List<string>
+                    {
+                        "All threads execute the block simultaneously in parallel",
+                        "Mutual exclusion (only one thread can execute the critical section at a time on the monitor lock) and memory visibility",
+                        "The thread is converted into a separate operating system process",
+                        "The JVM disables garbage collection permanently"
+                    }),
+                    CorrectOption = 1,
+                    HintText = "It prevents race conditions when multiple threads access shared mutable state.",
+                    ExplanationText = "synchronized acquires an intrinsic lock (monitor) on the object, ensuring only one thread enters the critical section at a time.",
                     XpValue = 25
                 }
             }
