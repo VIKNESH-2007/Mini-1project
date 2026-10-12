@@ -6,7 +6,6 @@ import {
   BookOpen, 
   User, 
   Users, 
-  Globe, 
   ArrowRight, 
   CheckCircle2, 
   AlertCircle, 
@@ -47,8 +46,8 @@ export default function AuthPage() {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
-  const { login, register, loginWithGoogle, switchRole, authLoading } = useAuth();
-  const { language, setLanguage, supportedLanguages } = useLanguage();
+  const { login, register, loginWithGoogle, authLoading } = useAuth();
+  const { language } = useLanguage();
   const navigate = useNavigate();
 
   const handleRoleChange = (roleKey) => {
@@ -62,11 +61,6 @@ export default function AuthPage() {
     else if (roleKey === 'parent') navigate('/parent');
     else if (roleKey === 'admin') navigate('/admin');
     else navigate('/dashboard');
-  };
-
-  const handleQuickDemoLogin = () => {
-    switchRole(selectedRole);
-    navigateToRoleDashboard(selectedRole);
   };
 
   // Launch Google Sign-In Flow
@@ -619,10 +613,10 @@ export default function AuthPage() {
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
-              { role: 'student', label: 'Student', icon: User, desc: 'Sanjay (B.Tech CS)' },
-              { role: 'teacher', label: 'Teacher', icon: GraduationCap, desc: 'Prof. Senthil Nathan' },
-              { role: 'parent', label: 'Parent', icon: Users, desc: 'Murugan (Guardian)' },
-              { role: 'admin', label: 'Admin', icon: ShieldCheck, desc: 'Dr. Meenakshi' }
+              { role: 'student', label: 'Student', icon: User, desc: 'Learn with AI' },
+              { role: 'teacher', label: 'Teacher', icon: GraduationCap, desc: 'Faculty Portal' },
+              { role: 'parent', label: 'Parent', icon: Users, desc: 'Monitor Child' },
+              { role: 'admin', label: 'Admin', icon: ShieldCheck, desc: 'College Admin' }
             ].map((item) => {
               const Icon = item.icon;
               const isSelected = selectedRole === item.role;
@@ -643,40 +637,6 @@ export default function AuthPage() {
                 </button>
               );
             })}
-          </div>
-
-          {/* 1-Click Demo Login for Selected Portal */}
-          <button
-            type="button"
-            onClick={handleQuickDemoLogin}
-            className="w-full py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-95"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>
-              Instant Demo Login to {selectedRole === 'student' ? 'Student Portal (Sanjay)' : selectedRole === 'teacher' ? 'Teacher Portal (Prof. Senthil Nathan)' : selectedRole === 'parent' ? 'Parent Portal (Murugan)' : 'Admin Portal (Dr. Meenakshi)'}
-            </span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {/* Language selector dropdown */}
-        <div>
-          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
-            Preferred Language
-          </label>
-          <div className="relative">
-            <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-500 rounded-xl text-xs sm:text-sm text-slate-800 font-bold outline-none transition appearance-none cursor-pointer"
-            >
-              {supportedLanguages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.flag} {lang.name} ({lang.nativeName})
-                </option>
-              ))}
-            </select>
           </div>
         </div>
 
